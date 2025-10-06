@@ -1,14 +1,18 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Slider } from '@/components/ui/slider';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { RefreshCw, Copy, Check } from 'lucide-react';
-import { generatePassword, calculatePasswordStrength, PasswordOptions } from '@/lib/password-generator';
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { RefreshCw, Copy, Check } from "lucide-react";
+import {
+  generatePassword,
+  calculatePasswordStrength,
+  PasswordOptions,
+} from "@/lib/password-generator";
 
 interface PasswordGeneratorProps {
   onUsePassword?: (password: string) => void;
@@ -24,8 +28,9 @@ export function PasswordGenerator({ onUsePassword }: PasswordGeneratorProps) {
     excludeSimilar: false,
   });
 
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState("");
   const [copied, setCopied] = useState(false);
+  const [usedMessage, setUsedMessage] = useState(false);
 
   useEffect(() => {
     generateNewPassword();
@@ -65,7 +70,11 @@ export function PasswordGenerator({ onUsePassword }: PasswordGeneratorProps) {
               onClick={copyToClipboard}
               title="Copy to clipboard"
             >
-              {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+              {copied ? (
+                <Check className="h-4 w-4" />
+              ) : (
+                <Copy className="h-4 w-4" />
+              )}
             </Button>
             <Button
               size="icon"
@@ -84,7 +93,9 @@ export function PasswordGenerator({ onUsePassword }: PasswordGeneratorProps) {
                 style={{ width: `${(strength.score / 8) * 100}%` }}
               />
             </div>
-            <span className="text-sm font-medium min-w-[60px]">{strength.label}</span>
+            <span className="text-sm font-medium min-w-[60px]">
+              {strength.label}
+            </span>
           </div>
         </div>
 
@@ -95,7 +106,9 @@ export function PasswordGenerator({ onUsePassword }: PasswordGeneratorProps) {
             </div>
             <Slider
               value={[options.length]}
-              onValueChange={([value]) => setOptions({ ...options, length: value })}
+              onValueChange={([value]) =>
+                setOptions({ ...options, length: value })
+              }
               min={8}
               max={64}
               step={1}
@@ -171,9 +184,24 @@ export function PasswordGenerator({ onUsePassword }: PasswordGeneratorProps) {
         </div>
 
         {onUsePassword && (
-          <Button onClick={() => onUsePassword(password)} className="w-full">
-            Use This Password
-          </Button>
+          <>
+            <Button
+              onClick={() => {
+                onUsePassword(password);
+                setUsedMessage(true);
+                setTimeout(() => setUsedMessage(false), 2000);
+              }}
+              className="w-full"
+            >
+              Use This Password
+            </Button>
+
+            {usedMessage && (
+              <div className="text-green-600 text-center text-sm mt-2">
+                Your password has been used.
+              </div>
+            )}
+          </>
         )}
       </CardContent>
     </Card>
