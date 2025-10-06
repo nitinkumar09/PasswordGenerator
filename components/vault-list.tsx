@@ -58,7 +58,6 @@ export function VaultList({ items, onAdd, onEdit, onDelete }: VaultListProps) {
   const copyToClipboard = async (text: string, field: string) => {
     await navigator.clipboard.writeText(text);
     setCopiedField(field);
-
     setTimeout(() => {
       navigator.clipboard.writeText("");
       setCopiedField(null);
@@ -176,6 +175,7 @@ export function VaultList({ items, onAdd, onEdit, onDelete }: VaultListProps) {
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
+              {/* Username */}
               {selectedItem.username && (
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Username</label>
@@ -199,6 +199,7 @@ export function VaultList({ items, onAdd, onEdit, onDelete }: VaultListProps) {
                 </div>
               )}
 
+              {/* Password */}
               <div className="space-y-2">
                 <label className="text-sm font-medium">Password</label>
                 <div className="flex gap-2">
@@ -241,6 +242,7 @@ export function VaultList({ items, onAdd, onEdit, onDelete }: VaultListProps) {
                 )}
               </div>
 
+              {/* URL */}
               {selectedItem.url && (
                 <div className="space-y-2">
                   <label className="text-sm font-medium">URL</label>
@@ -270,6 +272,7 @@ export function VaultList({ items, onAdd, onEdit, onDelete }: VaultListProps) {
                 </div>
               )}
 
+              {/* Notes */}
               {selectedItem.notes && (
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Notes</label>
@@ -295,6 +298,25 @@ export function VaultList({ items, onAdd, onEdit, onDelete }: VaultListProps) {
           </Card>
         )}
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Item</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this item? This action cannot be
+              undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete}>
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
